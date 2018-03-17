@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
 
     // avoid contaminating the viewDidLoad() function
     // {} is called a closure, or anon. functions
@@ -33,23 +33,50 @@ class ViewController: UIViewController {
     
     let halfContainer: UIView = {
         let container = UIView()
-        container.backgroundColor = .blue
+//        container.backgroundColor = .blue
         container.translatesAutoresizingMaskIntoConstraints = false
         return container
         
     }()
     
+    let inputName: UITextField = {
+        let name = UITextField()
+        name.translatesAutoresizingMaskIntoConstraints = false
+        name.placeholder = "Name"
+        name.frame = CGRect(x: 20, y: 100, width: 300, height: 40)
+        name.font = UIFont.systemFont(ofSize: 15)
+        name.borderStyle = UITextBorderStyle.roundedRect
+        name.autocorrectionType = UITextAutocorrectionType.no
+        name.keyboardType = UIKeyboardType.default
+        name.returnKeyType = UIReturnKeyType.done
+        name.clearButtonMode = UITextFieldViewMode.whileEditing;
+        name.contentVerticalAlignment = UIControlContentVerticalAlignment.center
+        return name
+    }()
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
+    
+    let continueButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     private func setupUI(){
         
         // this enables autolayout for our weightsImage
-        weightsImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        weightsImage.widthAnchor.constraint(equalToConstant: 300).isActive = true
-        weightsImage.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        weightsImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        weightsImage.centerXAnchor.constraint(equalTo: halfContainer.centerXAnchor).isActive = true
+        weightsImage.centerYAnchor.constraint(equalTo: halfContainer.centerYAnchor).isActive = true
+        weightsImage.widthAnchor.constraint(equalTo: halfContainer.widthAnchor, multiplier: 0.8).isActive = true
+        weightsImage.heightAnchor.constraint(equalTo: halfContainer.heightAnchor, multiplier: 0.8).isActive = true
+        weightsImage.topAnchor.constraint(equalTo: halfContainer.topAnchor, constant: 0).isActive = true
         
         // this enables autolayout for our welcomeTextView
         welcomeTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        welcomeTextView.topAnchor.constraint(equalTo: weightsImage.bottomAnchor, constant: 0).isActive = true
+        welcomeTextView.topAnchor.constraint(equalTo: weightsImage.bottomAnchor).isActive = true
         welcomeTextView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         welcomeTextView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         welcomeTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
@@ -60,9 +87,14 @@ class ViewController: UIViewController {
         halfContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         halfContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         halfContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-
-
-
+        
+        // this enables autolayout for our inputName
+        inputName.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        inputName.topAnchor.constraint(equalTo: weightsImage.bottomAnchor, constant: 100).isActive = true
+        
+        // this enables autolayout for our continueButton
+        continueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        continueButton.topAnchor.constraint(equalTo: weightsImage.bottomAnchor, constant: 150).isActive = true
 
 
 
@@ -71,19 +103,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        //view.backgroundColor = .black
         
-        view.addSubview(weightsImage)
+        halfContainer.addSubview(weightsImage)
         view.addSubview(welcomeTextView)
         view.addSubview(halfContainer)
+        view.addSubview(inputName)
+        view.addSubview(continueButton)
+        self.inputName.delegate = self
+
         setupUI()
-        
-        
-        
-        
-        
-
-
         
     }
 
